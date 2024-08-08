@@ -12,4 +12,4 @@ There are a few things that I could plan on improving for this project some of t
 
 [Link to Figma UI Design](https://www.figma.com/design/ii4xxsJ0ghevUOcssTlHZv/Sprint-3%3A-Around-the-US?node-id=6432-147&t=8kqfcnrG4wRCZuHf-0)
 
-[Link to the Project on GitHub](https://github.com/torimartins27/se_project_aroundtheus)
+[Link to the Project on GitHub](https://torimartins27.github.io/se_project_aroundtheus)

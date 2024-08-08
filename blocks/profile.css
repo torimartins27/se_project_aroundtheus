@@ -4,6 +4,7 @@
   padding-top: 40px;
   margin: 0 auto;
   max-width: 882px;
+  box-sizing: border-box;
 }
 
 .profile__info {
@@ -57,6 +58,7 @@
   white-space: nowrap;
   overflow: hidden;
   max-width: 373px;
+  text-overflow: ellipsis;
 }
 
 .profile__description {
@@ -71,6 +73,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 415px;
+  white-space: nowrap;
 }
 
 .profile__image {
