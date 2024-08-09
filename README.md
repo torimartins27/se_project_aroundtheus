@@ -20,4 +20,4 @@ There are a few things that I could plan on improving for this project some of t
 
 [Link to the Project](https://torimartins27.github.io/se_project_aroundtheus)
 
-[Video Link](https://drive.google.com/file/d/1FzmXJV09HItI0FYa_7KKNld2O3TAO8yx/view?usp=sharing)
+[Video Link](https://drive.google.com/file/d/1lfWGN2zpZPMjuBa4SWbxdc2t6SGS-sdS/view?usp=sharing)
