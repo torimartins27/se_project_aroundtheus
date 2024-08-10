@@ -4,25 +4,17 @@
   grid-template-columns: repeat(auto-fit, 282px);
   grid-gap: 20px 17px;
   padding: 0;
-  margin-top: 51px;
+  margin: 0 auto 0 auto;
 }
 
 @media screen and (max-width: 775px) {
   .cards {
     padding-bottom: 0;
   }
-
-  .cards__list {
-    margin-top: 36px;
-  }
 }
 
 @media screen and (max-width: 420px) {
   .cards {
     padding-bottom: 0;
-  }
-
-  .cards__list {
-    margin-top: 36px;
   }
 }
