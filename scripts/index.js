@@ -53,7 +53,7 @@ const cardTemplate =
 /* Functions */
 
 function closePopup() {
-  profileEditModal.classList.remove("modal__opened");
+  profileEditModal.classList.remove("modal_opened");
 }
 
 function getCardElement(cardData) {
@@ -62,14 +62,12 @@ function getCardElement(cardData) {
   // access the card title and image and store them in variables
   const cardImageEl = cardElement.querySelector(".card__image");
   const cardTitleEl = cardElement.querySelector(".card__title");
-  // access the card alt attribute and store them into a variable
-  const cardAltEl = cardElement.querySelector(".card__image");
   // set the card title to the name of the object
   cardTitleEl.textContent = cardData.name;
   // set the card image src as the link of the object
   cardImageEl.src = cardData.link;
   // set the alt attribute for the object to the name of the image
-  cardAltEl.alt = cardData.name;
+  cardImageEl.alt = cardData.name;
   // return the ready HTML element with the filled-in data
   return cardElement;
 }
@@ -88,7 +86,7 @@ function handleProfileEditSubmit(e) {
 profileEditBtn.addEventListener("click", () => {
   profileTitleInput.value = profileName.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
-  profileEditModal.classList.add("modal__opened");
+  profileEditModal.classList.add("modal_opened");
 });
 
 profileCloseBtn.addEventListener("click", closePopup);
