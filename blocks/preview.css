@@ -1,0 +1,21 @@
+.preview__image {
+  max-width: 100%;
+}
+
+.preview__container {
+  padding: 0;
+}
+
+.preview__close-button {
+  background-image: url("../images/closeIcon.svg");
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  position: absolute;
+  top: -45px;
+  right: -45px;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}

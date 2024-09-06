@@ -6,11 +6,21 @@
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  display: none; /*close modal when opening page*/
+  display: none;
   padding: 0 19px;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+}
+.modal__preview {
+  background: none;
+  margin: auto;
+  position: relative;
+}
+
+.preview__image {
+  max-width: 75vw;
+  max-height: 75vh;
 }
 
 .modal_opened {

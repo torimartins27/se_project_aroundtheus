@@ -5,6 +5,7 @@
   list-style: none;
   background-color: #fff;
   overflow: hidden;
+  position: relative;
 }
 
 .card__title {
@@ -49,4 +50,27 @@
 .card__like-button:hover {
   cursor: pointer;
   opacity: 0.5;
+}
+
+.card__like-button_active {
+  background-image: url(../images/Union.svg);
+}
+
+.card__delete-button {
+  background-image: url(../images/Trash.svg);
+  width: 18px;
+  height: 19.3px;
+  position: absolute;
+  cursor: pointer;
+  background-size: contain;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  padding: 0px;
+  top: 10px;
+  right: 10px;
+}
+
+.card__delete-button:hover {
+  background-image: url(../images/trashHover.svg);
 }
