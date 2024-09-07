@@ -1,7 +1,3 @@
-/* Do not know if these images can be chosen, I garden so it was a theme
- that I chose.
-I can easily change them if not */
-
 const initialCards = [
   {
     name: "Coneflowers",
@@ -57,11 +53,9 @@ const addCardCloseButton = addCardModal.querySelector(".modal__close");
 const addCardForm = document.querySelector("#add-card-form");
 
 const previewModal = document.querySelector("#previewModal");
-const previewModalImage = previewModal.querySelector(".preview__image");
-const previewModalCaption = previewModal.querySelector(".preview__title");
-const previewModalCloseBtn = previewModal.querySelector(
-  ".preview__close-button"
-);
+const previewModalImage = previewModal.querySelector(".modal__image");
+const previewModalCaption = previewModal.querySelector(".modal__caption");
+const previewModalCloseBtn = previewModal.querySelector(".modal__close");
 const addCardTitleInput = document.querySelector("#add-card-title");
 const addCardLinkInput = document.querySelector("#add-card-url");
 
@@ -129,6 +123,15 @@ function handleAddCardSubmit(e) {
   e.target.reset();
 }
 
+/* Universal Handler for close buttons */
+
+const closeButtons = document.querySelectorAll(".modal__close");
+
+closeButtons.forEach((button) => {
+  const popup = button.closest(".modal");
+  button.addEventListener("click", () => closePopup(popup));
+});
+
 /* Event Listeners */
 
 profileEditBtn.addEventListener("click", () => {
@@ -136,8 +139,6 @@ profileEditBtn.addEventListener("click", () => {
   profileDescriptionInput.value = profileDescription.textContent;
   openPopup(profileEditModal);
 });
-
-profileCloseBtn.addEventListener("click", () => closePopup(profileEditModal));
 
 profileEditForm.addEventListener("submit", handleProfileEditSubmit);
 
@@ -147,7 +148,4 @@ initialCards.forEach((cardData) => {
 });
 
 profileAddButton.addEventListener("click", () => openPopup(addCardModal));
-addCardCloseButton.addEventListener("click", () => closePopup(addCardModal));
 addCardForm.addEventListener("submit", handleAddCardSubmit);
-
-previewModalCloseBtn.addEventListener("click", () => closePopup(previewModal));

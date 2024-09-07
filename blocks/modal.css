@@ -6,11 +6,14 @@
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  display: none;
+  display: flex;
   padding: 0 19px;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.5s, opacity 0.5s linear;
 }
 .modal__preview {
   background: none;
@@ -18,13 +21,23 @@
   position: relative;
 }
 
-.preview__image {
+.modal__caption {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.52px;
+}
+
+.modal__image {
   max-width: 75vw;
   max-height: 75vh;
 }
 
 .modal_opened {
   display: flex;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .modal__closed {
