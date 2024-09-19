@@ -104,6 +104,21 @@ function getCardElement(cardData) {
 
 /* Event Handlers */
 
+function handleCloseOverlay(e) {
+  if (e.target.classList.contains("modal")) {
+    closePopup(e.target);
+  }
+}
+
+function handleEscapeKey(e) {
+  if (e.key === "Escape") {
+    const openModal = document.querySelector(".modal_opened"); // Select the currently opened modal
+    if (openModal) {
+      closePopup(openModal); // Close the modal if one is open
+    }
+  }
+}
+
 function handleProfileEditSubmit(e) {
   e.preventDefault();
   profileName.textContent = profileTitleInput.value;
@@ -149,3 +164,9 @@ initialCards.forEach((cardData) => {
 
 profileAddButton.addEventListener("click", () => openPopup(addCardModal));
 addCardForm.addEventListener("submit", handleAddCardSubmit);
+
+document.querySelectorAll(".modal").forEach((modal) => {
+  modal.addEventListener("click", handleCloseOverlay);
+});
+
+document.addEventListener("keydown", handleEscapeKey);
