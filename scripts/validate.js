@@ -21,12 +21,12 @@ function checkInputValidity(formEl, inputEl, options) {
 
 function disableButton(submitButton, inactiveButtonClass) {
   submitButton.classList.remove(inactiveButtonClass);
-  submitButton.disabled = true;
+  submitButton.disabled = false;
 }
 
 function enableButton(submitButton, inactiveButtonClass) {
   submitButton.classList.remove(inactiveButtonClass);
-  submitButton.disbled = false;
+  submitButton.disabled = false;
 }
 
 function hasInvalidInput(inputList) {
