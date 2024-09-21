@@ -59,7 +59,10 @@
             maxlength="40"
             required
           />
-          <span class="popup__error" id="profile-title-input-error"></span>
+          <span
+            class="modal__error-message"
+            id="profile-title-input-error"
+          ></span>
           <input
             type="text"
             name="description"
@@ -71,10 +74,10 @@
             required
           />
           <span
-            class="popup__error"
+            class="modal__error-message"
             id="profile-description-input-error"
           ></span>
-          <button class="modal__button popup__button_disabled" type="submit">
+          <button class="modal__button modal__button_disabled" type="submit">
             Save
           </button>
         </form>
@@ -96,7 +99,7 @@
             maxlength="30"
             required
           />
-          <span class="popup__error" id="add-card-title-error"></span>
+          <span class="modal__error-message" id="add-card-title-error"></span>
           <input
             id="add-card-url"
             class="modal__input"
@@ -105,9 +108,9 @@
             type="url"
             required
           />
-          <span class="popup__error" id="add-card-url-error"></span>
+          <span class="modal__error-message" id="add-card-url-error"></span>
           <button
-            class="modal__button popup__button_disabled"
+            class="modal__button modal__button_disabled"
             type="submit"
             disabled
           >

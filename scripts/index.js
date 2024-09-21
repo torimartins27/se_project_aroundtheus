@@ -63,10 +63,12 @@ const addCardLinkInput = document.querySelector("#add-card-url");
 
 function openPopup(modal) {
   modal.classList.add("modal_opened");
+  document.addEventListener("keydown", handleEscapeKey);
 }
 
 function closePopup(modal) {
   modal.classList.remove("modal_opened");
+  document.removeEventListener("keydown", handleEscapeKey);
 }
 
 function getCardElement(cardData) {
@@ -168,5 +170,3 @@ addCardForm.addEventListener("submit", handleAddCardSubmit);
 document.querySelectorAll(".modal").forEach((modal) => {
   modal.addEventListener("click", handleCloseOverlay);
 });
-
-document.addEventListener("keydown", handleEscapeKey);
