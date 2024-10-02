@@ -1,3 +1,6 @@
+import Card from "../components/card.js";
+import FormValidator from "../components/FormValidator.js";
+
 const initialCards = [
   {
     name: "Coneflowers",
@@ -29,6 +32,14 @@ const initialCards = [
     link: "https://plus.unsplash.com/premium_photo-1673570442940-b183c7b55ec1?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
+
+const cardData = {
+  name: "Coneflowers",
+  link: "https://images.unsplash.com/photo-1539652021954-757266f01b89?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+};
+
+const card = new Card(cardData, "#card-template");
+card.getView();
 
 /* Elements */
 
@@ -170,3 +181,17 @@ addCardForm.addEventListener("submit", handleAddCardSubmit);
 document.querySelectorAll(".modal").forEach((modal) => {
   modal.addEventListener("click", handleCloseOverlay);
 });
+
+const settings = {
+  inputSelector: ".modal__input", // Selector for input fields
+  submitButtonSelector: ".modal__submit", // Selector for the submit button
+  inactiveButtonClass: "modal__submit_disabled", // Class to disable the button
+  inputErrorClass: "modal__input_type_error", // Class to highlight input errors
+  errorClass: "modal__error_visible", // Class to show error messages
+};
+
+const editFormValidator = new FormValidator(settings, profileEditForm);
+const addFormValidator = new FormValidator(settings, addCardForm);
+
+editFormValidator.enableValidation();
+addFormValidator.enableValidation();
