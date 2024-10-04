@@ -184,7 +184,7 @@ document.querySelectorAll(".modal").forEach((modal) => {
 
 const settings = {
   inputSelector: ".modal__input", // Selector for input fields
-  submitButtonSelector: ".modal__submit", // Selector for the submit button
+  submitButtonSelector: ".modal__button", // Selector for the submit button
   inactiveButtonClass: "modal__submit_disabled", // Class to disable the button
   inputErrorClass: "modal__input_type_error", // Class to highlight input errors
   errorClass: "modal__error_visible", // Class to show error messages

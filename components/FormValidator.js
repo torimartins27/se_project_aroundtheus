@@ -41,14 +41,13 @@ export default class FormValidator {
   }
 
   _hasInvalidInput(inputList) {
-    return !inputList.every((inputEl) => inputEl.validity.valid);
-    //checking if every input is valid
-    // if every input is true than it should return false
+    return inputList.some((inputEl) => !inputEl.validity.valid);
   }
 
   _toggleButtonState() {
     if (this._hasInvalidInput(this._inputEls)) {
       this._disableButton();
+      return;
     } else {
       this._enableButton();
     }
@@ -64,13 +63,12 @@ export default class FormValidator {
   _setEventListeners() {
     this._inputEls = [...this._form.querySelectorAll(this._inputSelector)];
     this._submitButton = this._form.querySelector(this._submitButtonSelector);
-    console.log(this._inputEls, this._submitButton);
     this._inputEls.forEach((inputEl) => {
       inputEl.addEventListener("input", (e) => {
-        console.log(inputEl);
         this._checkInputValidity(inputEl);
         this._toggleButtonState();
       });
     });
+    this._toggleButtonState();
   }
 }

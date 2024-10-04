@@ -135,7 +135,7 @@ NOT the span element */
   border-bottom: 1px solid #ff0000;
 }
 
-.modal__button_disabled {
+.modal__submit_disabled {
   background-color: #fff;
   color: rgba(0, 0, 0, 0.2);
   border: 2px solid rgba(0, 0, 0, 0.2);
