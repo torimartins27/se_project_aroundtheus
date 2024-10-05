@@ -12,41 +12,46 @@ export default class Card {
       .addEventListener("click", () => {
         this._handleLikeIcon();
       });
+
     this._cardElement
       .querySelector(".card__delete-button")
       .addEventListener("click", () => {
         this._handleDeleteCard();
       });
-    // this._cardImageElement.addEventListener("click", () => {
-    //   this._handleImageClick(this);
-    // });
+
+    // Add the image click event listener
+    this._cardImageElement.addEventListener("click", () => {
+      this._handleImageClick(this._name, this._link); // Pass name and link to the click handler
+    });
   }
 
   _handleLikeIcon() {
-    this._cardElement.remove;
-    this._cardElement = null;
+    this._cardElement
+      .querySelector(".card__like-button")
+      .classList.toggle("card__like-button_active"); // Toggle the like button's active state
   }
 
   _handleDeleteCard() {
-    this._cardElement
-      .querySelector(".card__delete-button")
-      .classList.toggle(".card__delete-button_is-active");
+    this._cardElement.remove(); // Remove the card element from the DOM
+    this._cardElement = null; // Clear the reference
   }
 
+  // This method will now properly handle image clicks
   _handleImageClick() {}
-
-  // cardImageEl.addEventListener("click", () => {
-  //   openPopup(previewModal);
-  //   previewModalImage.src = cardData.link;
-  //   previewModalImage.alt = cardData.alt;
-  //   previewModalCaption.textContent = cardData.name;
-  // });
 
   getView() {
     this._cardElement = document
       .querySelector(this._cardSelector)
       .content.querySelector(".card")
       .cloneNode(true);
+
+    this._cardImageElement = this._cardElement.querySelector(".card__image");
+    this._cardElement.querySelector(".card__title").textContent = this._name;
+    this._cardImageElement.src = this._link;
+    this._cardImageElement.alt = this._name;
+
     this._setEventListeners();
+
+    return this._cardElement; // Return the complete card element
   }
 }
