@@ -6,46 +6,53 @@ export default class Card {
     this._handleImageClick = handleImageClick;
   }
 
+  // This method is now used to query all necessary elements and store them as class fields
+  getView() {
+    this._cardElement = document
+      .querySelector(this._cardSelector)
+      .content.querySelector(".card")
+      .cloneNode(true);
+
+    // Store elements as class fields
+    this._cardImageElement = this._cardElement.querySelector(".card__image");
+    this._likeButton = this._cardElement.querySelector(".card__like-button");
+    this._deleteButton = this._cardElement.querySelector(
+      ".card__delete-button"
+    );
+    this._cardTitleElement = this._cardElement.querySelector(".card__title");
+
+    // Assign values to elements
+    this._cardTitleElement.textContent = this._name;
+    this._cardImageElement.src = this._link;
+    this._cardImageElement.alt = this._name;
+
+    this._setEventListeners(); // Set up event listeners
+    return this._cardElement; // Return the complete card element
+  }
+
   _setEventListeners() {
-    this._cardElement
-      .querySelector(".card__like-button")
-      .addEventListener("click", () => {
-        this._handleLikeIcon();
-      });
+    // Now using the class fields instead of querying again
+    this._likeButton.addEventListener("click", () => {
+      this._handleLikeIcon();
+    });
 
-    this._cardElement
-      .querySelector(".card__delete-button")
-      .addEventListener("click", () => {
-        this._handleDeleteCard();
-      });
+    this._deleteButton.addEventListener("click", () => {
+      this._handleDeleteCard();
+    });
 
-    // Add the image click event listener
     this._cardImageElement.addEventListener("click", () => {
       this._handleImageClick(this._name, this._link); // Pass name and link to the click handler
     });
   }
 
   _handleLikeIcon() {
-    this._cardElement
-      .querySelector(".card__like-button")
-      .classList.toggle("card__like-button_active"); // Toggle the like button's active state
+    // Toggle the like button's active state using class field
+    this._likeButton.classList.toggle("card__like-button_active");
   }
 
   _handleDeleteCard() {
-    this._cardElement.remove(); // Remove the card element from the DOM
-    this._cardElement = null; // Clear the reference
-  }
-
-  getView() {
-    this._cardElement = document
-      .querySelector(this._cardSelector)
-      .content.querySelector(".card")
-      .cloneNode(true);
-    this._cardImageElement = this._cardElement.querySelector(".card__image");
-    this._cardElement.querySelector(".card__title").textContent = this._name;
-    this._cardImageElement.src = this._link;
-    this._cardImageElement.alt = this._name;
-    this._setEventListeners();
-    return this._cardElement; // Return the complete card element
+    // Remove the card element from the DOM and clear the reference
+    this._cardElement.remove();
+    this._cardElement = null;
   }
 }
