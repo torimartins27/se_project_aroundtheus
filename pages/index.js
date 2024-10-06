@@ -1,5 +1,6 @@
 // Import the Card and FormValidator classes
-import Card from "../components/card.js";
+import Card from "../components/Card.js"; // underlined red
+// after I changed card to Card.. not sure how to fix
 import FormValidator from "../components/FormValidator.js";
 
 // Initial cards data
@@ -110,7 +111,7 @@ function handleAddCardSubmit(e) {
   cardListEl.prepend(cardElement);
   closePopup(addCardModal);
   e.target.reset();
-  addFormValidator._toggleButtonState();
+  addFormValidator.toggleButtonState();
 }
 
 function handleImageClick(name, link) {
