@@ -36,22 +36,16 @@ export default class Card {
     this._cardElement = null; // Clear the reference
   }
 
-  // This method will now properly handle image clicks
-  _handleImageClick() {}
-
   getView() {
     this._cardElement = document
       .querySelector(this._cardSelector)
       .content.querySelector(".card")
       .cloneNode(true);
-
     this._cardImageElement = this._cardElement.querySelector(".card__image");
     this._cardElement.querySelector(".card__title").textContent = this._name;
     this._cardImageElement.src = this._link;
     this._cardImageElement.alt = this._name;
-
     this._setEventListeners();
-
     return this._cardElement; // Return the complete card element
   }
 }
