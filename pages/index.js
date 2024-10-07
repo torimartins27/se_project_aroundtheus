@@ -1,6 +1,5 @@
 // Import the Card and FormValidator classes
-import Card from "../components/Card.js"; // underlined red
-// after I changed card to Card.. not sure how to fix
+import Card from "./components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 
 // Initial cards data
