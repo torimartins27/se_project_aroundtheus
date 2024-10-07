@@ -111,7 +111,7 @@ function handleAddCardSubmit(e) {
   cardListEl.prepend(cardElement);
   closePopup(addCardModal);
   e.target.reset();
-  addFormValidator.toggleButtonState();
+  addFormValidator._toggleButtonState();
 }
 
 function handleImageClick(name, link) {
