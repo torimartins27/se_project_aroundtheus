@@ -4,20 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Around the U.S</title>
-    <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body class="page">
     <div class="page__content">
       <header class="header page__section">
         <img
-          src="./images/AroundVector.svg"
+          src="<%= require('/src/images/AroundVector.svg') %>"
           alt="Around the U.S. Logo"
           class="header__logo"
         />
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img src="./images/Avatar.png" alt="Avatar" class="profile__image" />
+          <img
+            src="<%= require('./src/images/Avatar.png') %>"
+            alt="Avatar"
+            class="profile__image"
+          />
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button class="profile__edit-button" type="button"></button>
@@ -131,11 +134,9 @@
           class="modal__close"
           id="closePreviewModal"
         ></button>
-        <img class="modal__image" alt="" src="" />
+        <img id="img-preview-modal" class="modal__image" alt="" src="" />
         <p class="modal__caption"></p>
       </div>
     </div>
-    <script src="./components/Card.js" type="module"></script>
-    <script src="./pages/index.js" type="module"></script>
   </body>
 </html>

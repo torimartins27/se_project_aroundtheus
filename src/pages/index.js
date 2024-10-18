@@ -1,6 +1,11 @@
 // Import the Card and FormValidator classes
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
+import "./index.css";
+import Section from "../components/Section.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import UserInfo from "../components/UserInfo.js";
 
 // Initial cards data
 const initialCards = [
@@ -58,6 +63,44 @@ const previewModalCloseBtn = previewModal.querySelector(".modal__close");
 const addCardTitleInput = document.querySelector("#add-card-title");
 const addCardLinkInput = document.querySelector("#add-card-url");
 
+// instantiating new objects
+
+const newCardPopup = new PopupWithForm(
+  { popupSelector: "#add-card-modal" },
+  handleAddCardSubmit
+);
+newCardPopup.setEventListeners();
+
+const editCardPopup = new PopupWithForm(
+  { popupSelector: "#profile-edit-modal" },
+  handleProfileEditSubmit
+);
+editCardPopup.setEventListeners();
+
+const userInfo = new UserInfo({
+  nameSelector: ".profile__title",
+  jobSelector: ".profile__description",
+});
+
+const cardSection = new Section(
+  {
+    items: initialCards,
+    renderer: (cardData) => {
+      const cardElement = createCard(cardData); // Create card using createCard
+      cardSection.addItem(cardElement); // Add the card to the DOM
+    },
+  },
+  ".cards__list" // Container selector
+);
+
+const popupWithImage = new PopupWithImage({
+  popupSelector: "#img-preview-modal",
+});
+popupWithImage.setEventListeners;
+
+// Render initial cards
+cardSection.renderItems();
+
 // Functions
 
 function openPopup(modal) {
@@ -73,7 +116,9 @@ function closePopup(modal) {
 // Function to create a new card
 function createCard(cardData) {
   const card = new Card(cardData, "#card-template", handleImageClick); // Instantiate the new Card
-  return card.getView(); // Return the card's HTML element
+  const cardElement = card.getView(); // Get the card's HTML element
+  console.log("Created card element:", cardElement); // Log the created element
+  return cardElement; // Return the card's HTML element
 }
 
 /* Event Handlers */
@@ -94,30 +139,31 @@ function handleEscapeKey(e) {
 }
 
 function handleProfileEditSubmit(e) {
-  e.preventDefault();
-  profileName.textContent = profileTitleInput.value;
-  profileDescription.textContent = profileDescriptionInput.value;
+  const newUserInfo = {
+    name: profileTitleInput.value,
+    description: profileDescriptionInput.value,
+  };
+  userInfo.setUserInfo(newUserInfo);
   closePopup(profileEditModal);
 }
 
 function handleAddCardSubmit(e) {
   e.preventDefault();
+  console.log("Form submitted", e);
   const cardData = {
     name: addCardTitleInput.value,
     link: addCardLinkInput.value,
   };
-  const cardElement = createCard(cardData); // Use the new createCard function
-  cardListEl.prepend(cardElement);
+  console.log("Card data:", cardData);
+  const cardElement = createCard(cardData); // Create a new card elenent
+  cardSection.addItem(cardElement); // Add card to the DOM
   closePopup(addCardModal);
   e.target.reset();
   addFormValidator.toggleButtonState();
 }
 
-function handleImageClick(name, link) {
-  openPopup(previewModal); // Assuming you already have this function
-  previewModalImage.src = link; // Set the modal image src
-  previewModalImage.alt = name; // Set the alt attribute
-  previewModalCaption.textContent = name; // Set the caption to the image name
+function handleImageClick(data) {
+  popupWithImage.open(data);
 }
 
 /* Universal Handler for close buttons */
