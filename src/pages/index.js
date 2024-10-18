@@ -147,19 +147,16 @@ function handleProfileEditSubmit(e) {
   closePopup(profileEditModal);
 }
 
-function handleAddCardSubmit(e) {
-  e.preventDefault();
-  console.log("Form submitted", e);
+function handleAddCardSubmit(formData) {
   const cardData = {
-    name: addCardTitleInput.value,
-    link: addCardLinkInput.value,
+    name: formData.name,
+    link: formData.link,
   };
-  console.log("Card data:", cardData);
-  const cardElement = createCard(cardData); // Create a new card elenent
+
+  const cardElement = createCard(cardData); // Create a new card element
   cardSection.addItem(cardElement); // Add card to the DOM
   closePopup(addCardModal);
-  e.target.reset();
-  addFormValidator.toggleButtonState();
+  addFormValidator.toggleButtonState(); // Reset form button state if needed
 }
 
 function handleImageClick(data) {
@@ -183,15 +180,12 @@ profileEditBtn.addEventListener("click", () => {
   openPopup(profileEditModal);
 });
 
-profileEditForm.addEventListener("submit", handleProfileEditSubmit);
-
 initialCards.forEach((cardData) => {
   const cardElement = createCard(cardData); // Use the new createCard function
   cardListEl.prepend(cardElement);
 });
 
 profileAddButton.addEventListener("click", () => openPopup(addCardModal));
-addCardForm.addEventListener("submit", handleAddCardSubmit);
 
 document.querySelectorAll(".modal").forEach((modal) => {
   modal.addEventListener("click", handleCloseOverlay);
