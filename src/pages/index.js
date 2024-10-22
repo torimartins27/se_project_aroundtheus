@@ -113,12 +113,6 @@ function createCard(cardData) {
 
 /* Event Handlers */
 
-function handleCloseOverlay(e) {
-  if (e.target.classList.contains("modal")) {
-    closePopup(e.target);
-  }
-}
-
 function handleProfileEditSubmit(e) {
   const newUserInfo = {
     name: profileTitleInput.value,
@@ -137,29 +131,17 @@ function handleAddCardSubmit(formData) {
   const cardElement = createCard(cardData); // Create a new card element
   cardSection.addItem(cardElement); // Add card to the DOM
   newCardPopup.close();
+  addCardForm.reset();
   addFormValidator.toggleButtonState(); // Reset form button state if needed
 }
 
 function handleImageClick(data) {
-  popupWithImage.open(data);
-}
-
-/* Universal Handler for close buttons */
-
-const closeButtons = document.querySelectorAll(".modal__close");
-
-closeButtons.forEach((button) => {
-  const popup = button.closest(".modal");
-  button.addEventListener("click", () => {
-    if (popup.id === "profile-edit-modal") {
-      editCardPopup.close();
-    } else if (popup.id === "add-card-modal") {
-      newCardPopup.close();
-    } else {
-      popupWithImage.close();
-    }
+  console.log("Image data being passed to popup before open:", data);
+  popupWithImage.open({
+    link: data.link, // URL for the image
+    name: data.name, // Name for the caption
   });
-});
+}
 
 /* Event Listeners */
 
@@ -175,10 +157,6 @@ initialCards.forEach((cardData) => {
 });
 
 profileAddButton.addEventListener("click", () => newCardPopup.open());
-
-document.querySelectorAll(".modal").forEach((modal) => {
-  modal.addEventListener("click", handleCloseOverlay);
-});
 
 const settings = {
   inputSelector: ".modal__input", // Selector for input fields
