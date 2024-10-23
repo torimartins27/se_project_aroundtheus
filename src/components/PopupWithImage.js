@@ -8,7 +8,6 @@ export default class PopupWithImage extends Popup {
   }
 
   open(data) {
-    console.log("Popup data:", data);
     this._imageElement.src = data.link; // Set the modal image src
     this._imageElement.alt = data.name; // Set the alt attribute
     this._captionElement.textContent = data.name;
