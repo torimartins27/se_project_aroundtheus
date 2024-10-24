@@ -74,10 +74,10 @@ function createCard(cardData) {
 
 /* Event Handlers */
 
-function handleProfileEditSubmit(e) {
+function handleProfileEditSubmit(formData) {
   userInfo.setUserInfo({
-    name: profileTitleInput.value,
-    description: profileDescriptionInput.value,
+    name: formData.title,
+    description: formData.description,
   });
   editCardPopup.close();
 }
