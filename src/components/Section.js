@@ -8,7 +8,7 @@ export default class Section {
   renderItems(cards) {
     console.log("Rendering items:", cards);
     cards.forEach((card) => {
-      this._renderer(card); // Calls createCard through the renderer
+      this._renderer(card);
     });
   }
 

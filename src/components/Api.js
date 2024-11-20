@@ -69,16 +69,25 @@ export default class Api {
   }
 
   likeCard(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}`, {
+    console.log("cardId in likeCard:", cardId); // Debugging log
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
     }).then(this._checkRes);
   }
 
   dislikeCard(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}`, {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
     }).then(this._checkRes);
+  }
+
+  toggleLike(cardId, isLiked) {
+    if (isLiked) {
+      return this.dislikeCard(cardId);
+    } else {
+      return this.likeCard(cardId);
+    }
   }
 }

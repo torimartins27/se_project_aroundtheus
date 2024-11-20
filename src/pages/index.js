@@ -1,4 +1,3 @@
-// Import dependencies
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
@@ -7,8 +6,7 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/Api.js";
 import "./index.css";
-import { initialCards } from "../utils/constants.js";
-import { cardTemplate } from "../utils/constants.js";
+import { cards } from "../utils/constants.js";
 
 import {
   profileEditBtn,
@@ -24,7 +22,7 @@ import {
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   headers: {
-    authorization: "494f5648-a88f-4ba0-b9db-af129a4fd5f1",
+    authorization: "42719720-4181-4d03-a580-e6b6e7bf680f",
     "Content-Type": "application/json",
   },
 });
@@ -66,9 +64,9 @@ api
 // Fetch and render initial cards
 api
   .getInitialCards()
-  .then((cards) => {
-    console.log("Fetched cards from API:", cards); // debugging log
-    cardSection.renderItems(initialCards);
+  .then((cardsData) => {
+    console.log("Rendering cards:", cardsData); // debugging log
+    cardSection.renderItems(cardsData);
   })
   .catch((err) => console.error("Error fetching cards:", err));
 
@@ -104,17 +102,16 @@ addFormValidator.enableValidation();
 console.log("Form validators enabled"); // debugging log
 
 // Helper Functions
-function createCard({ name, link }) {
-  const cardElement = cardTemplate.cloneNode(true);
-  const cardImage = cardElement.querySelector(".card__image");
-  const cardTitle = cardElement.querySelector(".card__title");
+function createCard({ name, link, _id, isLiked }) {
+  const card = new Card(
+    { name, link, _id, isLiked },
+    "#card-template",
+    handleImageClick,
+    handleLikeClick,
+    handleDeleteClick
+  );
 
-  cardImage.src = link;
-  cardImage.alt = name;
-  cardTitle.textContent = name;
-
-  // Add any other event listeners or functionality to the card, if necessary
-  return cardElement;
+  return card.getView();
 }
 
 // Event Handlers
@@ -160,16 +157,29 @@ function handleImageClick(data) {
   });
 }
 
-// Event Listeners
-profileEditBtn.addEventListener("click", () => {
-  const userData = userInfo.getUserInfo();
-  console.log("Profile edit button clicked. Current user data:", userData); // debugging log
-  profileTitleInput.value = userData.name;
-  profileDescriptionInput.value = userData.job;
-  editCardPopup.open();
-});
+function handleLikeClick(cardId, isLiked) {
+  console.log("cardId in handleLikeClick:", cardId);
+  console.log("isLiked in handleLikeClick:", isLiked);
 
-profileAddButton.addEventListener("click", () => {
-  console.log("Add card button clicked"); // debugging log
-  newCardPopup.open();
-});
+  // Use the likeCard method from Api.js
+  return api
+    .likeCard(cardId, isLiked) // Like or unlike the card based on isLiked
+    .then((updatedCard) => {
+      console.log("Updated card after toggle:", updatedCard);
+      return updatedCard; // Return the updated card object to Card.js
+    })
+    .catch((err) => {
+      console.error("Error toggling like:", err);
+      throw err;
+    });
+}
+
+function handleDeleteClick(cardId, deleteCard) {
+  console.log("Handling delete click with cardId:", cardId); // debugging log
+  api
+    .deleteCard(cardId)
+    .then(() => {
+      deleteCard();
+    })
+    .catch((err) => console.error("Error deleting card:", err));
+}
