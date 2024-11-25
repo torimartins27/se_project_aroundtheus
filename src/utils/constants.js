@@ -58,7 +58,6 @@ export const previewModalCloseBtn = previewModal.querySelector(".modal__close");
 export const addCardTitleInput = document.querySelector("#add-card-title");
 export const addCardLinkInput = document.querySelector("#add-card-url");
 
-// export const deleteCardModal = new ConfirmPopup("#delete-modal");
 export const settings = {
   inputSelector: ".modal__input", // Selector for input fields
   submitButtonSelector: ".modal__button", // Selector for the submit button

@@ -12,7 +12,6 @@ export default class UserInfo {
   }
 
   setUserInfo({ name, job }) {
-    console.log("Updating profile with name:", name, "and job:", job); // Debugging log
     this._nameElement.textContent = name;
     this._jobElement.textContent = job;
   }

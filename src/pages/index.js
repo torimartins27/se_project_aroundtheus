@@ -26,34 +26,29 @@ const api = new Api({
     "Content-Type": "application/json",
   },
 });
-console.log("API instance created:", api); // debugging log
 
 // Instantiate UserInfo
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   jobSelector: ".profile__description",
 });
-console.log("UserInfo instance created:", userInfo); // debugging log
 
 // Instantiate Section for cards
 const cardSection = new Section(
   {
     items: [],
     renderer: (cardData) => {
-      console.log("Rendering card:", cardData); // debugging log
       const cardElement = createCard(cardData);
       cardSection.addItem(cardElement);
     },
   },
   ".cards__list"
 );
-console.log("Section instance created:", cardSection); // debugging log
 
 // Fetch and set initial user data
 api
   .getUserData()
   .then((data) => {
-    console.log("Fetched user data:", data); // debugging log
     userInfo.setUserInfo({
       name: data.name,
       job: data.about,
@@ -65,7 +60,6 @@ api
 api
   .getInitialCards()
   .then((cardsData) => {
-    console.log("Rendering cards:", cardsData); // debugging log
     cardSection.renderItems(cardsData.reverse());
   })
   .catch((err) => console.error("Error fetching cards:", err));
@@ -76,36 +70,28 @@ const newCardPopup = new PopupWithForm(
   handleAddCardSubmit
 );
 newCardPopup.setEventListeners();
-console.log("PopupWithForm instance for adding card created:", newCardPopup); // debugging log
 
 const editCardPopup = new PopupWithForm(
   { popupSelector: "#profile-edit-modal" },
   handleProfileEditSubmit
 );
 editCardPopup.setEventListeners();
-console.log(
-  "PopupWithForm instance for editing profile created:",
-  editCardPopup
-); // debugging log
 
 const popupWithImage = new PopupWithImage({
   popupSelector: "#previewModal",
 });
 popupWithImage.setEventListeners();
-console.log("PopupWithImage instance created:", popupWithImage); // debugging log
 
 const confirmPopup = new ConfirmPopup({
   popupSelector: "#delete-modal",
 });
 confirmPopup.setEventListeners();
-console.log("ConfirmPopup instance for deleting card created:", confirmPopup);
 
 // Instantiate form validators
 const editFormValidator = new FormValidator(settings, profileEditForm);
 const addFormValidator = new FormValidator(settings, addCardForm);
 editFormValidator.enableValidation();
 addFormValidator.enableValidation();
-console.log("Form validators enabled"); // debugging log
 
 // Helper Functions
 function createCard({ name, link, _id, isLiked }) {
@@ -119,31 +105,26 @@ function createCard({ name, link, _id, isLiked }) {
     handleDeleteCard
   );
 
-  // Retrieve the card element from the Card instance
   const cardElement = card.getView();
+  const cardContainer = document.querySelector(".modal__container");
 
-  // Find the parent container where you want to append the card
-  const cardContainer = document.querySelector(".modal__container"); // Replace with your actual container selector
-
-  // Append the card to the parent container
   cardContainer.appendChild(cardElement);
 
-  // Now query for the delete button within the cardElement
   const deleteButton = cardElement.querySelector(".card__delete-button");
 
-  // Ensure the delete button is found before adding the event listener
   if (deleteButton) {
     deleteButton.addEventListener("click", () => {
-      console.log("Delete button clicked");
       confirmPopup.open();
     });
   } else {
     console.error("Delete button not found within card template.");
   }
 
-  // Return the card element
   return cardElement;
 }
+
+//Temporary function to upload cards to server, if you want me to delete it
+// I can
 
 let cardUploaded = true;
 
@@ -163,7 +144,6 @@ function uploadCardsToServer() {
         console.error("Error adding card to server", err);
       });
   });
-  //cardUploaded = true;
 }
 
 uploadCardsToServer();
@@ -177,7 +157,6 @@ function handleAddCardSubmit(formData) {
   api
     .createCard(cardData)
     .then((newCard) => {
-      console.log("New card created from API:", newCard); // Ensure newCard contains _id
       const cardElement = createCard(newCard);
       cardSection.addItem(cardElement);
       newCardPopup.close();
@@ -188,11 +167,9 @@ function handleAddCardSubmit(formData) {
 }
 
 function handleProfileEditSubmit(formData) {
-  console.log("Handling profile edit submit with data:", formData); // debugging log
   api
     .updateProInfo(formData.title, formData.description)
     .then((updatedUserData) => {
-      console.log("Profile updated from API:", updatedUserData); // debugging log
       userInfo.setUserInfo({
         name: updatedUserData.name,
         job: updatedUserData.about,
@@ -203,7 +180,6 @@ function handleProfileEditSubmit(formData) {
 }
 
 function handleImageClick(data) {
-  console.log("Image clicked with data:", data); // debugging log
   popupWithImage.open({
     link: data.link,
     name: data.name,
@@ -211,15 +187,10 @@ function handleImageClick(data) {
 }
 
 function handleLikeClick(cardId, isLiked) {
-  console.log("cardId in handleLikeClick:", cardId);
-  console.log("isLiked in handleLikeClick:", isLiked);
-
-  // Use the likeCard method from Api.js
   return api
-    .likeCard(cardId, isLiked) // Like or unlike the card based on isLiked
+    .likeCard(cardId, isLiked)
     .then((updatedCard) => {
-      console.log("Updated card after toggle:", updatedCard);
-      return updatedCard; // Return the updated card object to Card.js
+      return updatedCard;
     })
     .catch((err) => {
       console.error("Error toggling like:", err);
@@ -240,20 +211,17 @@ function handleUnlikeClick(cardId, isLiked) {
 }
 
 function handleDeleteCard(cardId, deleteCard) {
-  // Make sure the cardId is valid
   if (!cardId) {
     console.error("Card does not have a valid _id");
     return;
   }
 
-  // Set up the delete action
   confirmPopup.setSubmitAction(() => {
     api
-      .deleteCard(cardId) // Use the card's _id here
+      .deleteCard(cardId)
       .then(() => {
-        console.log(`Card ${cardId} deleted successfully`);
         if (typeof deleteCard === "function") {
-          deleteCard(); // This will remove the card element from the DOM
+          deleteCard();
         } else {
           console.error("deleteCard is not a function");
         }
