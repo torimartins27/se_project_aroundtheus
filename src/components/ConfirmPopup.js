@@ -1,13 +1,13 @@
 import Popup from "./Popup.js";
 
-export default class PopupWithConfirm extends Popup {
-  constructor(popupSelector) {
+export default class ConfirmPopup extends Popup {
+  constructor({ popupSelector }) {
     super({ popupSelector });
     this._submitFunction = null;
-    this._submitButton = this._form.querySelector(".modal__button");
+    this._submitButton = this._popupElement.querySelector(".modal__button");
   }
 
-  setSubmitAction(action) {
+  setSubmitAction(submitFunction) {
     this._submitFunction = submitFunction;
   }
 

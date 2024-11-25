@@ -4,7 +4,8 @@ export default class Card {
     cardSelector,
     handleImageClick,
     handleLikeClick,
-    handleDeleteClick
+    handleUnlikeClick,
+    handleDeleteCard
   ) {
     this._name = name;
     this._link = link;
@@ -13,11 +14,12 @@ export default class Card {
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
     this._handleLikeClick = handleLikeClick;
-    this._handleDeleteClick = handleDeleteClick;
+    this._handleUnlikeClick = handleUnlikeClick;
+    this._handleDeleteCard = handleDeleteCard;
   }
 
   setIsLiked(isLiked) {
-    this.isLiked = isLiked;
+    this._isLiked = isLiked;
     this._renderLikeButton();
   }
 
@@ -37,7 +39,10 @@ export default class Card {
 
     this._cardImageElement = this._cardElement.querySelector(".card__image");
     this._cardTitleElement = this._cardElement.querySelector(".card__title");
-    this._cardElement.setAttribute("data-id", this._id);
+    this._likeButton = this._cardElement.querySelector(".card__like-button");
+    this._deleteButton = this._cardElement.querySelector(
+      ".card__delete-button"
+    );
 
     this._cardTitleElement.textContent = this._name;
     this._cardImageElement.src = this._link;
@@ -49,24 +54,18 @@ export default class Card {
   }
 
   _setEventListeners() {
-    console.log("Card ID in _setEventListeners:", this._id); // Should show correct ID
-    this._likeButton = this._cardElement.querySelector(".card__like-button");
-    this._deleteButton = this._cardElement.querySelector(
-      ".card__delete-button"
-    );
-
     // Like button event listener
     if (this._likeButton) {
-      this._likeButton.addEventListener("click", () => {
-        this.toggleLike();
-      });
+      this._likeButton.addEventListener("click", () => this.toggleLike());
     }
 
     // Delete button event listener
     if (this._deleteButton) {
       this._deleteButton.addEventListener("click", () => {
-        if (this._handleDeleteClick) {
-          this._handleDeleteClick(this._id, this._deleteCard.bind(this));
+        if (this._handleDeleteCard) {
+          // Prevent immediate deletion by making sure you only trigger the delete when submitting
+          // Typically, this would be a form submit or confirmation
+          this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Delete the card upon confirmation
         }
       });
     }
@@ -80,16 +79,14 @@ export default class Card {
   }
 
   toggleLike() {
-    // Toggle the like state based on the current state
-    this._isLiked = !this._isLiked;
+    const handleClick = this._isLiked
+      ? this._handleUnlikeClick
+      : this._handleLikeClick;
 
-    // Call the handleLikeClick method to update the like state on the server
-    this._handleLikeClick(this._id, this._isLiked)
+    handleClick(this._id, this._isLiked)
       .then((updatedCard) => {
-        // Update the local state with the response from the server
         this._isLiked = updatedCard.isLiked;
-        this._likes = updatedCard.likes; // Update the likes array if necessary
-        this._renderLikeButton(); // Re-render the like button based on the new state
+        this._renderLikeButton();
       })
       .catch((err) => {
         console.error("Error toggling like:", err);
@@ -98,5 +95,6 @@ export default class Card {
 
   _deleteCard() {
     this._cardElement.remove();
+    this._cardElement = null;
   }
 }

@@ -7,11 +7,11 @@ import UserInfo from "../components/UserInfo.js";
 import Api from "../components/Api.js";
 import "./index.css";
 import { cards } from "../utils/constants.js";
+import ConfirmPopup from "../components/ConfirmPopup.js";
+import { deleteButton } from "../utils/constants.js";
 
 import {
   profileEditBtn,
-  profileTitleInput,
-  profileDescriptionInput,
   profileEditForm,
   profileAddButton,
   addCardForm,
@@ -22,7 +22,7 @@ import {
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   headers: {
-    authorization: "42719720-4181-4d03-a580-e6b6e7bf680f",
+    authorization: "1ed77d43-1f50-4439-8fce-4886cc18d836",
     "Content-Type": "application/json",
   },
 });
@@ -66,7 +66,7 @@ api
   .getInitialCards()
   .then((cardsData) => {
     console.log("Rendering cards:", cardsData); // debugging log
-    cardSection.renderItems(cardsData);
+    cardSection.renderItems(cardsData.reverse());
   })
   .catch((err) => console.error("Error fetching cards:", err));
 
@@ -94,6 +94,12 @@ const popupWithImage = new PopupWithImage({
 popupWithImage.setEventListeners();
 console.log("PopupWithImage instance created:", popupWithImage); // debugging log
 
+const confirmPopup = new ConfirmPopup({
+  popupSelector: "#delete-modal",
+});
+confirmPopup.setEventListeners();
+console.log("ConfirmPopup instance for deleting card created:", confirmPopup);
+
 // Instantiate form validators
 const editFormValidator = new FormValidator(settings, profileEditForm);
 const addFormValidator = new FormValidator(settings, addCardForm);
@@ -103,16 +109,64 @@ console.log("Form validators enabled"); // debugging log
 
 // Helper Functions
 function createCard({ name, link, _id, isLiked }) {
+  // Instantiate the card
   const card = new Card(
     { name, link, _id, isLiked },
     "#card-template",
     handleImageClick,
     handleLikeClick,
-    handleDeleteClick
+    handleUnlikeClick,
+    handleDeleteCard
   );
 
-  return card.getView();
+  // Retrieve the card element from the Card instance
+  const cardElement = card.getView();
+
+  // Find the parent container where you want to append the card
+  const cardContainer = document.querySelector(".modal__container"); // Replace with your actual container selector
+
+  // Append the card to the parent container
+  cardContainer.appendChild(cardElement);
+
+  // Now query for the delete button within the cardElement
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+
+  // Ensure the delete button is found before adding the event listener
+  if (deleteButton) {
+    deleteButton.addEventListener("click", () => {
+      console.log("Delete button clicked");
+      confirmPopup.open();
+    });
+  } else {
+    console.error("Delete button not found within card template.");
+  }
+
+  // Return the card element
+  return cardElement;
 }
+
+let cardUploaded = true;
+
+function uploadCardsToServer() {
+  if (cardUploaded) {
+    console.log("Cards already uploaded to server.");
+    return;
+  }
+
+  cards.forEach((card) => {
+    api
+      .createCard(card)
+      .then((addedCard) => {
+        console.log("Card added to server", addedCard);
+      })
+      .catch((err) => {
+        console.error("Error adding card to server", err);
+      });
+  });
+  //cardUploaded = true;
+}
+
+uploadCardsToServer();
 
 // Event Handlers
 function handleAddCardSubmit(formData) {
@@ -120,11 +174,10 @@ function handleAddCardSubmit(formData) {
     name: formData.title,
     link: formData.url,
   };
-  console.log("Handling add card submit with data:", cardData); // debugging log
   api
     .createCard(cardData)
     .then((newCard) => {
-      console.log("New card created from API:", newCard); // debugging log
+      console.log("New card created from API:", newCard); // Ensure newCard contains _id
       const cardElement = createCard(newCard);
       cardSection.addItem(cardElement);
       newCardPopup.close();
@@ -174,12 +227,49 @@ function handleLikeClick(cardId, isLiked) {
     });
 }
 
-function handleDeleteClick(cardId, deleteCard) {
-  console.log("Handling delete click with cardId:", cardId); // debugging log
-  api
-    .deleteCard(cardId)
-    .then(() => {
-      deleteCard();
+function handleUnlikeClick(cardId, isLiked) {
+  return api
+    .dislikeCard(cardId, isLiked)
+    .then((updatedCard) => {
+      return updatedCard;
     })
-    .catch((err) => console.error("Error deleting card:", err));
+    .catch((err) => {
+      console.error("Error toggling like button", err);
+      throw err;
+    });
 }
+
+function handleDeleteCard(cardId, deleteCard) {
+  // Make sure the cardId is valid
+  if (!cardId) {
+    console.error("Card does not have a valid _id");
+    return;
+  }
+
+  // Set up the delete action
+  confirmPopup.setSubmitAction(() => {
+    api
+      .deleteCard(cardId) // Use the card's _id here
+      .then(() => {
+        console.log(`Card ${cardId} deleted successfully`);
+        if (typeof deleteCard === "function") {
+          deleteCard(); // This will remove the card element from the DOM
+        } else {
+          console.error("deleteCard is not a function");
+        }
+        confirmPopup.close();
+      })
+      .catch((error) => {
+        console.error("Error deleting card:", error);
+      });
+  });
+  confirmPopup.open();
+}
+
+profileAddButton.addEventListener("click", () => {
+  newCardPopup.open();
+});
+
+profileEditBtn.addEventListener("click", () => {
+  editCardPopup.open();
+});

@@ -89,10 +89,10 @@
   display: block;
   background-color: #000;
   color: #fff;
-  margin-top: 48px;
+  margin: 20px 0 0;
+  text-align: center;
   border: none;
   cursor: pointer;
-  padding: 0;
   font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
@@ -107,7 +107,7 @@
   display: block;
   width: 358px;
   height: 27px;
-  padding-top: 30px;
+  margin: 15px 0 30px;
   /* box-sizing: border-box; */
   font-family: "Inter", Arial, Helvetica, sans-serif;
 }
