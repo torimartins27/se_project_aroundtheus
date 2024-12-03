@@ -29,6 +29,8 @@ export const cards = [
 export const profileEditBtn = document.querySelector(".profile__edit-button");
 export const profileEditModal = document.querySelector("#profile-edit-modal");
 export const profileCloseBtn = profileEditModal.querySelector(".modal__close");
+export const profileAvatarEdit = document.querySelector("#edit-avatar-button");
+export const profileAvatarModal = document.querySelector("#avatar-edit-modal");
 
 export const profileName = document.querySelector(".profile__title");
 export const profileDescription = document.querySelector(

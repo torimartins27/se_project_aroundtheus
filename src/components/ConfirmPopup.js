@@ -5,10 +5,19 @@ export default class ConfirmPopup extends Popup {
     super({ popupSelector });
     this._submitFunction = null;
     this._submitButton = this._popupElement.querySelector(".modal__button");
+    this._saveButton = this._popupElement.querySelector(".modal__button");
   }
 
   setSubmitAction(submitFunction) {
     this._submitFunction = submitFunction;
+  }
+
+  renderLoading(isLoading) {
+    if (isLoading) {
+      this._saveButton.textContent = "Loading...";
+    } else {
+      this._saveButton.textContent = "Yes";
+    }
   }
 
   setEventListeners() {

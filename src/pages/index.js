@@ -8,7 +8,6 @@ import Api from "../components/Api.js";
 import "./index.css";
 import { cards } from "../utils/constants.js";
 import ConfirmPopup from "../components/ConfirmPopup.js";
-import { deleteButton } from "../utils/constants.js";
 
 import {
   profileEditBtn,
@@ -16,13 +15,17 @@ import {
   profileAddButton,
   addCardForm,
   settings,
+  profileAvatarEdit,
 } from "../utils/constants.js";
+
+console.log("PROFILE ADD BUTTON: ", profileAddButton);
+console.log("PROFILE AVATAR EDIT BUTTON: ", profileAvatarEdit);
 
 // Instantiate the API
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   headers: {
-    authorization: "1ed77d43-1f50-4439-8fce-4886cc18d836",
+    authorization: "ab0ea543-0b60-41e4-a35e-f01573db496a",
     "Content-Type": "application/json",
   },
 });
@@ -31,6 +34,7 @@ const api = new Api({
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   jobSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
 // Instantiate Section for cards
@@ -53,6 +57,7 @@ api
       name: data.name,
       job: data.about,
     });
+    userInfo.setuserAvatar(data.avatar);
   })
   .catch((err) => console.error("Error fetching user data:", err));
 
@@ -76,6 +81,14 @@ const editCardPopup = new PopupWithForm(
   handleProfileEditSubmit
 );
 editCardPopup.setEventListeners();
+
+const editAvatarPopup = new PopupWithForm(
+  {
+    popupSelector: "#avatar-edit-modal",
+  },
+  handleEditAvatarSubmit
+);
+editAvatarPopup.setEventListeners();
 
 const popupWithImage = new PopupWithImage({
   popupSelector: "#previewModal",
@@ -149,7 +162,46 @@ function uploadCardsToServer() {
 uploadCardsToServer();
 
 // Event Handlers
+
+function handleEditAvatarSubmit(formData) {
+  editAvatarPopup.renderLoading(true);
+  const avatarUrl = formData.avatarUrl;
+  api
+    .updateProPic(avatarUrl)
+    .then((updatedUserData) => {
+      console.log(updatedUserData);
+      userInfo.setuserAvatar(updatedUserData.avatar);
+      editAvatarPopup.close();
+    })
+    .catch((error) => {
+      console.error("Error updating avatar:", error);
+    })
+    .finally(() => {
+      editAvatarPopup.renderLoading(false, "Save");
+    });
+}
+
+function handleProfileEditSubmit(formData) {
+  editCardPopup.renderLoading(true);
+  api
+    .updateProInfo(formData.title, formData.description)
+    .then((updatedUserData) => {
+      userInfo.setUserInfo({
+        name: updatedUserData.name,
+        job: updatedUserData.about,
+      });
+      editCardPopup.close();
+    })
+    .catch((error) => {
+      console.error("Error updating profile:", error);
+    })
+    .finally(() => {
+      editCardPopup.renderLoading(false, "Save");
+    });
+}
+
 function handleAddCardSubmit(formData) {
+  newCardPopup.renderLoading(true);
   const cardData = {
     name: formData.title,
     link: formData.url,
@@ -163,20 +215,12 @@ function handleAddCardSubmit(formData) {
       addCardForm.reset();
       addFormValidator.toggleButtonState();
     })
-    .catch((error) => console.error("Error adding new card:", error));
-}
-
-function handleProfileEditSubmit(formData) {
-  api
-    .updateProInfo(formData.title, formData.description)
-    .then((updatedUserData) => {
-      userInfo.setUserInfo({
-        name: updatedUserData.name,
-        job: updatedUserData.about,
-      });
-      editCardPopup.close();
+    .catch((error) => {
+      console.error("Error adding new card:", error);
     })
-    .catch((error) => console.error("Error updating profile:", error));
+    .finally(() => {
+      newCardPopup.renderLoading(false, "Save");
+    });
 }
 
 function handleImageClick(data) {
@@ -233,6 +277,13 @@ function handleDeleteCard(cardId, deleteCard) {
   });
   confirmPopup.open();
 }
+
+//Event Listeners
+
+profileAvatarEdit.addEventListener("click", () => {
+  console.log("Avatar edit button clicked!");
+  editAvatarPopup.open();
+});
 
 profileAddButton.addEventListener("click", () => {
   newCardPopup.open();

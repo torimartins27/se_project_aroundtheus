@@ -37,7 +37,6 @@ export default class Api {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
-      "Content-type": "application/json",
       body: JSON.stringify({
         avatar: avatarUrl,
       }),
