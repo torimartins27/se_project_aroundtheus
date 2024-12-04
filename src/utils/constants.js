@@ -31,6 +31,7 @@ export const profileEditModal = document.querySelector("#profile-edit-modal");
 export const profileCloseBtn = profileEditModal.querySelector(".modal__close");
 export const profileAvatarEdit = document.querySelector("#edit-avatar-button");
 export const profileAvatarModal = document.querySelector("#avatar-edit-modal");
+export const editAvatarForm = document.querySelector("#edit-avatar-form");
 
 export const profileName = document.querySelector(".profile__title");
 export const profileDescription = document.querySelector(

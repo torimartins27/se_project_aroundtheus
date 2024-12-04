@@ -12,14 +12,6 @@ export default class ConfirmPopup extends Popup {
     this._submitFunction = submitFunction;
   }
 
-  renderLoading(isLoading) {
-    if (isLoading) {
-      this._saveButton.textContent = "Loading...";
-    } else {
-      this._saveButton.textContent = "Yes";
-    }
-  }
-
   setEventListeners() {
     super.setEventListeners();
 
@@ -28,7 +20,6 @@ export default class ConfirmPopup extends Popup {
       if (this._submitFunction) {
         this._submitFunction();
       }
-      this.close();
     });
   }
 }

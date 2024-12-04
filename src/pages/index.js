@@ -16,6 +16,7 @@ import {
   addCardForm,
   settings,
   profileAvatarEdit,
+  editAvatarForm,
 } from "../utils/constants.js";
 
 console.log("PROFILE ADD BUTTON: ", profileAddButton);
@@ -103,124 +104,89 @@ confirmPopup.setEventListeners();
 // Instantiate form validators
 const editFormValidator = new FormValidator(settings, profileEditForm);
 const addFormValidator = new FormValidator(settings, addCardForm);
+const avatarFormValidator = new FormValidator(settings, editAvatarForm);
 editFormValidator.enableValidation();
 addFormValidator.enableValidation();
+avatarFormValidator.enableValidation();
+
+// Universal submit handler
+function handleSubmit(request, popupInstance, loadingText = "Saving...") {
+  popupInstance.renderLoading(true, loadingText);
+  request()
+    .then(() => {
+      popupInstance.close();
+    })
+    .catch((err) => console.error("Error occurred:", err))
+    .finally(() => {
+      popupInstance.renderLoading(false);
+    });
+}
 
 // Helper Functions
-function createCard({ name, link, _id, isLiked }) {
-  // Instantiate the card
+function createCard(cardData) {
+  // encapsulation of card logic:
+  // all card specific logic (rendering, event handling, likes, deletes) is handled
+  // by the Card class
+  // now this function is only responsible for creating and appending the card to DOM
   const card = new Card(
-    { name, link, _id, isLiked },
-    "#card-template",
-    handleImageClick,
-    handleLikeClick,
-    handleUnlikeClick,
-    handleDeleteCard
+    cardData, // data for the card (name, link, _id, isLiked)
+    "#card-template", // selector for the card template in the HTML
+    handleImageClick, // callback for when the image is clicked
+    api.likeCard, // API method for liking
+    api.unlikeCard, // API method for unliking
+    api.deleteCard // API method for deleting
   );
-
-  const cardElement = card.getView();
-  const cardContainer = document.querySelector(".modal__container");
-
-  cardContainer.appendChild(cardElement);
-
-  const deleteButton = cardElement.querySelector(".card__delete-button");
-
-  if (deleteButton) {
-    deleteButton.addEventListener("click", () => {
-      confirmPopup.open();
-    });
-  } else {
-    console.error("Delete button not found within card template.");
-  }
-
-  return cardElement;
+  return card.getView(); // generates fully constructed card
 }
-
-//Temporary function to upload cards to server, if you want me to delete it
-// I can
-
-let cardUploaded = true;
-
-function uploadCardsToServer() {
-  if (cardUploaded) {
-    console.log("Cards already uploaded to server.");
-    return;
-  }
-
-  cards.forEach((card) => {
-    api
-      .createCard(card)
-      .then((addedCard) => {
-        console.log("Card added to server", addedCard);
-      })
-      .catch((err) => {
-        console.error("Error adding card to server", err);
-      });
-  });
-}
-
-uploadCardsToServer();
 
 // Event Handlers
 
 function handleEditAvatarSubmit(formData) {
-  editAvatarPopup.renderLoading(true);
+  // editAvatarPopup.renderLoading(true);
   const avatarUrl = formData.avatarUrl;
-  api
-    .updateProPic(avatarUrl)
-    .then((updatedUserData) => {
-      console.log(updatedUserData);
-      userInfo.setuserAvatar(updatedUserData.avatar);
-      editAvatarPopup.close();
-    })
-    .catch((error) => {
-      console.error("Error updating avatar:", error);
-    })
-    .finally(() => {
-      editAvatarPopup.renderLoading(false, "Save");
-    });
+  handleSubmit(
+    () =>
+      api.updateProPic(avatarUrl).then((updatedUserData) => {
+        userInfo.setuserAvatar(updatedUserData.avatar);
+      }),
+    editAvatarPopup,
+    "Saving..."
+  );
 }
 
 function handleProfileEditSubmit(formData) {
-  editCardPopup.renderLoading(true);
-  api
-    .updateProInfo(formData.title, formData.description)
-    .then((updatedUserData) => {
-      userInfo.setUserInfo({
-        name: updatedUserData.name,
-        job: updatedUserData.about,
-      });
-      editCardPopup.close();
-    })
-    .catch((error) => {
-      console.error("Error updating profile:", error);
-    })
-    .finally(() => {
-      editCardPopup.renderLoading(false, "Save");
-    });
+  handleSubmit(
+    () =>
+      api
+        .updateProInfo(formData.title, formData.description)
+        .then((updatedUserData) => {
+          userInfo.setUserInfo({
+            name: updatedUserData.name,
+            job: updatedUserData.about,
+          });
+        }),
+    editCardPopup,
+    "Saving..."
+  );
 }
 
 function handleAddCardSubmit(formData) {
-  newCardPopup.renderLoading(true);
   const cardData = {
     name: formData.title,
     link: formData.url,
   };
-  api
-    .createCard(cardData)
-    .then((newCard) => {
-      const cardElement = createCard(newCard);
-      cardSection.addItem(cardElement);
-      newCardPopup.close();
-      addCardForm.reset();
-      addFormValidator.toggleButtonState();
-    })
-    .catch((error) => {
-      console.error("Error adding new card:", error);
-    })
-    .finally(() => {
-      newCardPopup.renderLoading(false, "Save");
-    });
+
+  handleSubmit(
+    () =>
+      api.createCard(cardData).then((newCard) => {
+        const cardElement = createCard(newCard);
+        cardSection.addItem(cardElement);
+        addCardForm.reset();
+        addFormValidator.toggleButtonState();
+      }),
+    newCardPopup,
+    "Saving..."
+  );
 }
 
 function handleImageClick(data) {
@@ -228,54 +194,6 @@ function handleImageClick(data) {
     link: data.link,
     name: data.name,
   });
-}
-
-function handleLikeClick(cardId, isLiked) {
-  return api
-    .likeCard(cardId, isLiked)
-    .then((updatedCard) => {
-      return updatedCard;
-    })
-    .catch((err) => {
-      console.error("Error toggling like:", err);
-      throw err;
-    });
-}
-
-function handleUnlikeClick(cardId, isLiked) {
-  return api
-    .dislikeCard(cardId, isLiked)
-    .then((updatedCard) => {
-      return updatedCard;
-    })
-    .catch((err) => {
-      console.error("Error toggling like button", err);
-      throw err;
-    });
-}
-
-function handleDeleteCard(cardId, deleteCard) {
-  if (!cardId) {
-    console.error("Card does not have a valid _id");
-    return;
-  }
-
-  confirmPopup.setSubmitAction(() => {
-    api
-      .deleteCard(cardId)
-      .then(() => {
-        if (typeof deleteCard === "function") {
-          deleteCard();
-        } else {
-          console.error("deleteCard is not a function");
-        }
-        confirmPopup.close();
-      })
-      .catch((error) => {
-        console.error("Error deleting card:", error);
-      });
-  });
-  confirmPopup.open();
 }
 
 //Event Listeners
