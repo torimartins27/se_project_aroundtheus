@@ -63,8 +63,6 @@ export default class Card {
     if (this._deleteButton) {
       this._deleteButton.addEventListener("click", () => {
         if (this._handleDeleteCard) {
-          // Prevent immediate deletion by making sure you only trigger the delete when submitting
-          // Typically, this would be a form submit or confirmation
           this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Delete the card upon confirmation
         }
       });
