@@ -26,7 +26,7 @@ console.log("PROFILE AVATAR EDIT BUTTON: ", profileAvatarEdit);
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   headers: {
-    authorization: "ab0ea543-0b60-41e4-a35e-f01573db496a",
+    authorization: "7402cb6d-0a3f-4a76-a646-356bcf96e0d6",
     "Content-Type": "application/json",
   },
 });
