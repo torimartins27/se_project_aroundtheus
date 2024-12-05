@@ -18,13 +18,11 @@ export default class Card {
     this._handleDeleteCard = handleDeleteCard;
   }
 
-  // encapsulation of logic: updating the like state
   setIsLiked(isLiked) {
     this._isLiked = isLiked;
-    this._renderLikeButton(); // dynamically updates the like buttons appearance
+    this._renderLikeButton();
   }
 
-  // encapsulation of logic: renders the current state of the like button
   _renderLikeButton() {
     if (this._isLiked) {
       this._likeButton.classList.add("card__like-button_active");
@@ -33,7 +31,6 @@ export default class Card {
     }
   }
 
-  // builds the card element
   getView() {
     this._cardElement = document
       .querySelector(this._cardSelector)
@@ -52,38 +49,35 @@ export default class Card {
     this._cardImageElement.alt = this._name;
 
     this._setEventListeners();
-    this._renderLikeButton(); // ensures the like button matches the initial state
+    this._renderLikeButton();
     return this._cardElement;
   }
 
-  // encapsulation of logic: sets up all event listeners for the card
   _setEventListeners() {
     // Like button event listener
-    this._likeButton.addEventListener("click", () => this.toggleLike());
+    if (this._likeButton) {
+      this._likeButton.addEventListener("click", () => this.toggleLike());
+    }
 
     // Delete button event listener
-    this._deleteButton.addEventListener("click", () => {
-      this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Delete the card upon confirmation
-    });
+    if (this._deleteButton) {
+      this._deleteButton.addEventListener("click", () => {
+        if (this._handleDeleteCard) {
+          // Prevent immediate deletion by making sure you only trigger the delete when submitting
+          // Typically, this would be a form submit or confirmation
+          this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Delete the card upon confirmation
+        }
+      });
+    }
 
     // Image click event listener
-    this._cardImageElement.addEventListener("click", () => {
-      this._handleImageClick({ name: this._name, link: this._link });
-    });
-  }
-
-  // encapsulation of logic: confirms deletion and interacts with API
-  _confirmDelete() {
-    if (this._handleDeleteCard) {
-      this._handleDeleteCard(this._id)
-        .then(() => this._deleteCard()) // removal happens after successful API call
-        .catch((err) => {
-          console.error("Error deleting card:", err);
-        });
+    if (this._cardImageElement) {
+      this._cardImageElement.addEventListener("click", () => {
+        this._handleImageClick({ name: this._name, link: this._link });
+      });
     }
   }
 
-  // encapsulation of logic: handles like/unlike toggling, including API calls
   toggleLike() {
     const handleClick = this._isLiked
       ? this._handleUnlikeClick
@@ -91,7 +85,7 @@ export default class Card {
 
     handleClick(this._id, this._isLiked)
       .then((updatedCard) => {
-        this._isLiked = updatedCard.isLiked; // updates the like state dynamically
+        this._isLiked = updatedCard.isLiked;
         this._renderLikeButton();
       })
       .catch((err) => {
@@ -99,9 +93,16 @@ export default class Card {
       });
   }
 
-  // dynamically removes the card from the DOM
+  _confirmDelete() {
+    // Open the confirmation modal inside the Card class
+    confirmPopup.setSubmitAction(() => {
+      this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Confirm delete action
+    });
+    confirmPopup.open();
+  }
+
   _deleteCard() {
     this._cardElement.remove();
-    this._cardElement = null; // cleam up reference for memory efficiency
+    this._cardElement = null;
   }
 }

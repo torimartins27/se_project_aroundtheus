@@ -89,7 +89,7 @@
   display: block;
   background-color: #000;
   color: #fff;
-  margin: 20px 0 0;
+  margin: 25px 0 0;
   text-align: center;
   border: none;
   cursor: pointer;
@@ -126,6 +126,8 @@
   line-height: 14.52px;
   display: block;
   margin-top: 5px;
+  margin-bottom: 0px;
+  position: absolute;
 }
 
 /* popup__input_type_error class is applied to the input element
