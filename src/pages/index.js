@@ -6,7 +6,6 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/Api.js";
 import "./index.css";
-import { cards } from "../utils/constants.js";
 import ConfirmPopup from "../components/ConfirmPopup.js";
 
 import {
@@ -17,6 +16,8 @@ import {
   settings,
   profileAvatarEdit,
   editAvatarForm,
+  profileTitleInput,
+  profileDescriptionInput,
 } from "../utils/constants.js";
 
 console.log("PROFILE ADD BUTTON: ", profileAddButton);
@@ -254,5 +255,8 @@ profileAddButton.addEventListener("click", () => {
 });
 
 profileEditBtn.addEventListener("click", () => {
+  const allData = userInfo.getUserInfo();
+  profileTitleInput.value = allData.name;
+  profileDescriptionInput.value = allData.job;
   editCardPopup.open();
 });
