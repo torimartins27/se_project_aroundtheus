@@ -6,6 +6,7 @@
   max-width: 882px;
   box-sizing: border-box;
   padding-bottom: 51px;
+  position: relative;
 }
 
 .profile__info {
@@ -34,7 +35,6 @@
 }
 
 .profile__add-button {
-  display: flex;
   background: transparent url(../images/add-button.svg) center no-repeat;
   height: 50px;
   width: 150px;
@@ -47,6 +47,30 @@
 .profile__add-button:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.profile__edit-avatar-button {
+  position: absolute;
+  top: 42%;
+  right: 91.5%;
+  /* hoping the positioning I used for this icon is accetable
+  I tried creating a container to hold the image and button but it messed up the
+  styling of my whole page, positioned the icon responsive to other devices
+   and centered as best as I could */
+  width: 26px;
+  height: 26px;
+  background: transparent url(../images/editAvatar.svg) center no-repeat;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.profile__image:hover + .profile__edit-avatar-button,
+.profile__edit-avatar-button:hover {
+  opacity: 1;
+  transform: translate(0, 0); /* Adjust position on hover */
 }
 
 .profile__title {
@@ -103,6 +127,11 @@
     padding-right: 19px;
   }
 
+  .profile__edit-avatar-button {
+    top: 23%;
+    right: 48%;
+  }
+
   .profile__description {
     width: 100%;
     text-align: center;
@@ -143,6 +172,11 @@
     padding-top: 0;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .profile__edit-avatar-button {
+    top: 24%;
+    right: 47%;
   }
 
   .profile__title {

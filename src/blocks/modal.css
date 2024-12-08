@@ -89,10 +89,10 @@
   display: block;
   background-color: #000;
   color: #fff;
-  margin-top: 48px;
+  margin: 48px 0 0;
+  text-align: center;
   border: none;
   cursor: pointer;
-  padding: 0;
   font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
@@ -106,10 +106,17 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: block;
   width: 358px;
-  height: 27px;
-  padding-top: 30px;
-  /* box-sizing: border-box; */
+  margin: 30px 0 0px;
+
   font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+.modal__input:first-of-type {
+  margin-top: 0;
+}
+
+.modal__input:last-of-type {
+  margin-top: 30px;
 }
 
 .modal__input::placeholder {
@@ -125,8 +132,10 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 14.52px;
-  position: absolute;
+  display: block;
   margin-top: 5px;
+  margin-bottom: 0px;
+  position: absolute;
 }
 
 /* popup__input_type_error class is applied to the input element
@@ -151,7 +160,6 @@ NOT the span element */
 
   .modal__input {
     width: 238px;
-    height: 27px;
   }
 
   .modal__button {

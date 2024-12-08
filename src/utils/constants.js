@@ -1,4 +1,4 @@
-export const initialCards = [
+export const cards = [
   {
     name: "Coneflowers",
     link: "https://images.unsplash.com/photo-1539652021954-757266f01b89?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -29,6 +29,9 @@ export const initialCards = [
 export const profileEditBtn = document.querySelector(".profile__edit-button");
 export const profileEditModal = document.querySelector("#profile-edit-modal");
 export const profileCloseBtn = profileEditModal.querySelector(".modal__close");
+export const profileAvatarEdit = document.querySelector("#edit-avatar-button");
+export const profileAvatarModal = document.querySelector("#avatar-edit-modal");
+export const editAvatarForm = document.querySelector("#edit-avatar-form");
 
 export const profileName = document.querySelector(".profile__title");
 export const profileDescription = document.querySelector(
@@ -47,6 +50,8 @@ export const profileAddButton = document.querySelector(".profile__add-button");
 export const addCardModal = document.querySelector("#add-card-modal");
 export const addCardCloseButton = addCardModal.querySelector(".modal__close");
 export const addCardForm = document.querySelector("#add-card-form");
+export const deleteCardModal = document.querySelector("#delete-modal");
+export const deleteButton = document.querySelector(".card__delete-button");
 
 export const previewModal = document.querySelector("#previewModal");
 export const previewModalImage = previewModal.querySelector(".modal__image");

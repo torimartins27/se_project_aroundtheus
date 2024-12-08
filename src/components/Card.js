@@ -1,57 +1,105 @@
 export default class Card {
-  constructor({ name, link }, cardSelector, handleImageClick) {
+  constructor(
+    { name, link, _id, isLiked },
+    cardSelector,
+    handleImageClick,
+    handleLikeClick,
+    handleUnlikeClick,
+    handleDeleteCard
+  ) {
     this._name = name;
     this._link = link;
+    this._id = _id;
+    this._isLiked = isLiked;
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
+    this._handleLikeClick = handleLikeClick;
+    this._handleUnlikeClick = handleUnlikeClick;
+    this._handleDeleteCard = handleDeleteCard;
   }
 
-  // This method is now used to query all necessary elements and store them as class fields
+  setIsLiked(isLiked) {
+    this._isLiked = isLiked;
+    this._renderLikeButton();
+  }
+
+  _renderLikeButton() {
+    if (this._isLiked) {
+      this._likeButton.classList.add("card__like-button_active");
+    } else {
+      this._likeButton.classList.remove("card__like-button_active");
+    }
+  }
+
   getView() {
     this._cardElement = document
       .querySelector(this._cardSelector)
       .content.querySelector(".card")
       .cloneNode(true);
 
-    // Store elements as class fields
     this._cardImageElement = this._cardElement.querySelector(".card__image");
+    this._cardTitleElement = this._cardElement.querySelector(".card__title");
     this._likeButton = this._cardElement.querySelector(".card__like-button");
     this._deleteButton = this._cardElement.querySelector(
       ".card__delete-button"
     );
-    this._cardTitleElement = this._cardElement.querySelector(".card__title");
 
-    // Assign values to elements
     this._cardTitleElement.textContent = this._name;
     this._cardImageElement.src = this._link;
     this._cardImageElement.alt = this._name;
 
-    this._setEventListeners(); // Set up event listeners
-    return this._cardElement; // Return the complete card element
+    this._setEventListeners();
+    this._renderLikeButton();
+    return this._cardElement;
   }
 
   _setEventListeners() {
-    // Now using the class fields instead of querying again
-    this._likeButton.addEventListener("click", () => {
-      this._handleLikeIcon();
-    });
+    // Like button event listener
+    if (this._likeButton) {
+      this._likeButton.addEventListener("click", () => this.toggleLike());
+    }
 
-    this._deleteButton.addEventListener("click", () => {
-      this._handleDeleteCard();
-    });
+    // Delete button event listener
+    if (this._deleteButton) {
+      this._deleteButton.addEventListener("click", () => {
+        if (this._handleDeleteCard) {
+          this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Delete the card upon confirmation
+        }
+      });
+    }
 
-    this._cardImageElement.addEventListener("click", () => {
-      this._handleImageClick({ name: this._name, link: this._link }); // Pass name and link to the click handler
-    });
+    // Image click event listener
+    if (this._cardImageElement) {
+      this._cardImageElement.addEventListener("click", () => {
+        this._handleImageClick({ name: this._name, link: this._link });
+      });
+    }
   }
 
-  _handleLikeIcon() {
-    // Toggle the like button's active state using class field
-    this._likeButton.classList.toggle("card__like-button_active");
+  toggleLike() {
+    const handleClick = this._isLiked
+      ? this._handleUnlikeClick
+      : this._handleLikeClick;
+
+    handleClick(this._id, this._isLiked)
+      .then((updatedCard) => {
+        this._isLiked = updatedCard.isLiked;
+        this._renderLikeButton();
+      })
+      .catch((err) => {
+        console.error("Error toggling like:", err);
+      });
   }
 
-  _handleDeleteCard() {
-    // Remove the card element from the DOM and clear the reference
+  _confirmDelete() {
+    // Open the confirmation modal inside the Card class
+    confirmPopup.setSubmitAction(() => {
+      this._handleDeleteCard(this._id, this._deleteCard.bind(this)); // Confirm delete action
+    });
+    confirmPopup.open();
+  }
+
+  _deleteCard() {
     this._cardElement.remove();
     this._cardElement = null;
   }
